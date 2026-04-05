@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hi-Lo">
+<title>Hi-Lo Counter</title>
+
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#0d0d0d;font-family:-apple-system,Arial;color:#fff;overflow:hidden}
+.zone{position:fixed;left:0;width:100%;display:flex;align-items:center;justify-content:center;font-size:28vw;font-weight:900;color:rgba(255,255,255,.15)}
+#plus{top:0;height:50vh;background:#177d34}
+#minus{bottom:0;height:50vh;background:#8d2020}
+.panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92vw,430px);background:rgba(0,0,0,.85);border-radius:22px;padding:18px;text-align:center}
+.count{font-size:70px;font-weight:900}
+input{width:100%;padding:14px;border-radius:12px;border:none;margin-top:10px;font-size:18px;text-align:center}
+.row{display:flex;gap:10px;margin-top:10px}
+button{flex:1;padding:14px;border:none;border-radius:12px;font-weight:bold;font-size:16px}
+#calc{background:#ffd34d;color:#111}
+#reset{background:#444;color:#fff}
+#true{margin-top:12px;font-size:28px;font-weight:bold}
+</style>
+</head>
+
+<body>
+
+<div id="plus" class="zone">+</div>
+<div id="minus" class="zone">−</div>
+
+<div class="panel">
+<div id="count" class="count">0</div>
+
+<input id="decks" placeholder="balíky (např. 3.5)">
+
+<div class="row">
+<button id="calc">True Count</button>
+<button id="reset">Reset</button>
+</div>
+
+<div id="true">—</div>
+</div>
+
+<script>
+let running=0;
+const countEl=document.getElementById('count');
+const decksEl=document.getElementById('decks');
+const trueEl=document.getElementById('true');
+
+function render(){countEl.textContent=running;}
+
+function tap(el,fn){
+el.addEventListener('click',e=>{e.preventDefault();fn();});
+el.addEventListener('touchstart',e=>{e.preventDefault();fn();});
+}
+
+tap(document.getElementById('plus'),()=>{running++;render();});
+tap(document.getElementById('minus'),()=>{running--;render();});
+
+tap(document.getElementById('calc'),()=>{
+const val=decksEl.value.replace(',', '.');
+const decks=parseFloat(val);
+if(!decks||decks<=0){trueEl.textContent="Zadej balíky";return;}
+const tc=running/decks;
+trueEl.textContent=(tc>=0?"+":"")+tc.toFixed(2);
+});
+
+tap(document.getElementById('reset'),()=>{
+running=0;
+decksEl.value="";
+trueEl.textContent="—";
+render();
+});
+
+render();
+</script>
+
+</body>
+</html>
